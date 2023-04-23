@@ -42,25 +42,19 @@ const Navbar = () => {
 						<span className="icon-bar"></span>
 						<span className="icon-bar"></span>
 					</button>
-					<a className="navbar-brand" href="/">
-						Dashboard
-					</a>
+					
 				</div>
 				<div className="collapse navbar-collapse">
 					<ul className="nav navbar-nav navbar-right">
 						<li>
-							<a href="#">
-								<span className="glyphicon glyphicon-user">&nbsp;</span>Hello
+							<a href="#" className="fontcolor">
+								<span className="glyphicon glyphicon-user ">&nbsp;</span>Hello
 								User
 							</a>
 						</li>
-						<li className="active">
-							<a title="View Website" href="#">
-								<span className="glyphicon glyphicon-globe"></span>
-							</a>
-						</li>
+						
 						<li>
-							<Button className="logoutbtn" onClick={handleLogout}>Logout</Button>
+							<Button className="glyphicon-logout logoutbtn" onClick={handleLogout}>Logout</Button>
 						</li>
 					</ul>
 				</div>

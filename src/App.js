@@ -8,6 +8,13 @@ import PageNotFound from "./Pages/PageNotFound";
 import Home from "./Pages/Home";
 import Sidebar from "./Pages/Sidebar";
 import Navbar from "./Pages/navbar";
+import Mygroup from "./Pages/Student/Mygroup";
+import Mentor from "./Pages/Student/mentors";
+import Dashboard from "./Pages/Teacher/Dashboard";
+import Requests from "./Pages/Teacher/Requests";
+import List from "./Pages/Teacher/List";
+import Teachers from "./Pages/Admin/Teachers";
+import AllGroups from "./Pages/Admin/Allgroups";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -33,7 +40,6 @@ function App() {
 		return (
 			<Router>
 				<ToastContainer />
-				
 
 				<Routes>
 					<Route path="/login" element={<Login />} />
@@ -48,10 +54,17 @@ function App() {
 				<ToastContainer />
 				<Navbar />
 				<Sidebar />
-				
+
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="*" element={<PageNotFound />} />
+					<Route path="/mygroup" element={<Mygroup />} />
+					<Route path="/mentor" element={<Mentor />} />
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/requests" element={<Requests />} />
+					<Route path="/list" element={<List />} />
+					<Route path="/allgroups" element={<AllGroups />} />
+					<Route path="/teachers" element={<Teachers />} />
 				</Routes>
 			</Router>
 		);

@@ -6,13 +6,13 @@
 }
 
 body {
-	background: #e35869 !important;
+	background: #c8baaa !important;
 	font-family: "Rubik", sans-serif;
 }
 
 .login-form {
 	background: #fff;
-	width: 500px;
+	width: 400px;
 	margin: 100px auto;
 	display: flex;
 	flex-direction: column;
@@ -23,8 +23,8 @@ body {
 
 .register-form {
 	background: #fff;
-	width: 500px;
-	margin:  auto;
+	width: 400px;
+	margin: auto;
 	display: flex;
 	flex-direction: column;
 	align-self: center;

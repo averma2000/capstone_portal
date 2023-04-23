@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebaseConfig";
@@ -12,6 +12,8 @@ const Register = () => {
 	const [userType, setUserType] = useState("student");
 	const [id, setId] = useState("");
 	const [name, setName] = useState("");
+
+	const signInButtonRef = useRef(null);
 
 	const [confirmpassword, setConfirmPassword] = useState("");
 
@@ -33,7 +35,7 @@ const Register = () => {
 
 				addDoc(collection(db, "User"), {
 					name: name,
-					id:id,
+					id: id,
 					email: email,
 					userType: userType,
 				});
@@ -49,8 +51,13 @@ const Register = () => {
 		navigate("/login");
 	}
 
+	const handleKeyPress = (event) => {
+		if (event.key === "Enter") {
+			signInButtonRef.current.click();
+		}
+	};
 	return (
-		<div className="register-form">
+		<div className="register-form ">
 			<form>
 				<h1>Register</h1>
 				<div className="content">
@@ -123,7 +130,9 @@ const Register = () => {
 					<Button className="colorHilightBtn" onClick={handleRegister}>
 						Register
 					</Button>
-					<button onClick={handleClick}>Sign in</button>
+					<button ref={signInButtonRef} onClick={handleClick}>
+						Sign in
+					</button>
 				</div>
 			</form>
 		</div>

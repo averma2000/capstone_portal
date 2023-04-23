@@ -1,88 +1,38 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../StyleSheets/Sidebar.css";
-import {
-	addDoc,
-	collection,
-	getDoc,
-	getDocs,
-	query,
-	where,
-} from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
+import getUserType from "./getUserType";
 
 const Sidebar = () => {
 	const currUserEmail = auth.currentUser.email;
 	console.log(currUserEmail);
 
-	const [menuToRender, setMenuToRender] = useState([]);
-
-	const navigate = useNavigate();
-
-	const userType = "student";
-
-	function addelement() {
-		var completelist = document.getElementById("list");
-		if (userType == "student") {
-			studentMenu.forEach((e) => {
-				completelist.innerHTML +=`<li className="side-bar tmargin">
-				<a href="#">
-					<span className="glyphicon glyphicon-list">&nbsp;</span>
-					${e.title}
-				</a>
-			</li>`
-			});
-			
-		}
-	}
+	//student Menu
+	const studentMenu = [
+		{
+			title: "My Group",
+			path: "/mygroup",
+		},
+		{
+			title: "Mentor",
+			path: "/mentor",
+		},
+	];
 
 	// teacher Menu
 	const teacherMenu = [
 		{
 			title: "Dashboard",
-			onClick: () => navigate("/"),
-
-			path: "/",
+			path: "/dashboard",
 		},
 		{
 			title: "Requests",
-			onClick: () => navigate("/applied-jobs"),
-
-			path: "/applied-jobs",
+			path: "requests",
 		},
 		{
-			title: "Lists",
-			onClick: () => navigate("/posted-jobs"),
-			icon: <i className="ri-file-list-2-line"></i>,
-			path: "/posted-jobs",
-		},
-		{
-			title: "Logout",
-			onClick: () => {},
-
-			path: "/login",
-		},
-	];
-
-	//student Menu
-	const studentMenu = [
-		{
-			title: "My Group",
-			onClick: () => navigate("/posted-jobs"),
-
-			path: "/posted-jobs",
-		},
-		{
-			title: "Mentor",
-			onClick: () => navigate("/posted-jobs"),
-
-			path: "/posted-jobs",
-		},
-		{
-			title: "Logout",
-			onClick: () => {},
-
-			path: "/login",
+			title: "List",
+			path: "/list",
 		},
 	];
 
@@ -90,68 +40,51 @@ const Sidebar = () => {
 	const adminMenu = [
 		{
 			title: "All Groups",
-			onClick: () => navigate("/"),
-
-			path: "/",
+			path: "/allgroups",
 		},
-
 		{
 			title: "Teachers",
-			onClick: () => navigate("/admin/jobs"),
-			icon: <i className="ri-file-list-2-line"></i>,
-			path: "/admin/jobs",
+			path: "teachers",
 		},
 	];
+
+	function addelement(temp) {
+		let dbtype;
+
+		if (temp == "student") {
+			dbtype = studentMenu;
+		}
+		if (temp == "teacher") {
+			dbtype = teacherMenu;
+		}
+		if (temp == "admin") {
+			dbtype = adminMenu;
+		}
+
+		return dbtype;
+	}
+
+	const uType = addelement("teacher");
 
 	return (
 		<div className="menu">
 			<div className="container-fluid">
 				<div className="col-md-3">
 					<div id="sidebar">
-						<div className="container-fluid tmargin">
+						<div className="container-fluid ">
 							<h3 className="heading-text">Capstone Portal</h3>
 						</div>
 
 						<ul className="nav navbar-nav side-bar" id="list">
-							{addelement()}
-							<li className="side-bar tmargin">
-								<a href="#">
-									<span className="glyphicon glyphicon-list">&nbsp;</span>
-									Dashboard
-								</a>
-							</li>
-							<li className="side-bar">
-								<a href="#">
-									<span className="glyphicon glyphicon-flag">&nbsp;</span>Purok
-								</a>
-							</li>
-							<li className="side-bar">
-								<a href="#">
-									<span className="glyphicon glyphicon-star">&nbsp;</span>
-									Blotter
-								</a>
-							</li>
-							<li className="side-bar">
-								<a href="#">
-									<span className="glyphicon glyphicon-certificate">
-										&nbsp;
-									</span>
-									Officials
-								</a>
-							</li>
-
-							<li className="side-bar">
-								<a href="#">
-									<span className="glyphicon glyphicon-signal">&nbsp;</span>
-									Statistics
-								</a>
-							</li>
-							<li className="side-bar">
-								<a href="#">
-									<span className="glyphicon glyphicon-cog">&nbsp;</span>
-									Settings
-								</a>
-							</li>
+							{uType.map((item) => (
+								<li
+									className="side-bar tmargin sidebar-item"
+									id="title"
+									key={item.path}
+								>
+									<Link to={item.path}>{item.title}</Link>
+								</li>
+							))}
 						</ul>
 					</div>
 				</div>

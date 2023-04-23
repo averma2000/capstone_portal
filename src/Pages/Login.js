@@ -4,7 +4,6 @@ import { auth } from "../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { Button } from "reactstrap";
 import "../StyleSheets/LoginRegister.css";
-// import Email from "./Sidebar";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -32,7 +31,6 @@ const Login = () => {
 			.then(async (res) => {
 				console.log(res);
 				const user = res.user;
-				// <Email email={ email} />
 				Navigate("/");
 			})
 			.catch((err) => {
@@ -40,7 +38,7 @@ const Login = () => {
 			});
 	};
 	return (
-		<form className="login-form">
+		<form className="login-form ">
 			<h1>Login</h1>
 
 			<div className="content">
@@ -80,10 +78,10 @@ const Login = () => {
 				</div>
 			</div>
 			<div className="action">
-				<button onClick={handleClick}>Register</button>
 				<Button className="colorHilightBtn" onClick={handleLogin}>
 					Sign in
 				</Button>
+				<button onClick={handleClick}>Register</button>
 			</div>
 		</form>
 	);

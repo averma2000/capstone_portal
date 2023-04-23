@@ -15,10 +15,11 @@ body {
 	border: none;
 	border-radius: 0;
 	overflow-y: auto;
-	background-color: #222;
+	background-color: #2d3b55;
 	bottom: 0;
 	overflow-x: hidden;
 	padding-bottom: 40px;
+	border-right: 2px solid #000000;
 }
 
 .side-bar > li > a {
@@ -37,6 +38,9 @@ body {
 
 .mynavbar {
 	margin-left: 200px;
+	margin-bottom: 0;
+	background-color: #2d3b55 !important;
+	border-bottom: 2px solid #000000;
 }
 
 .heading-text {
@@ -52,3 +56,8 @@ body {
 	width: 100px !important;
 	margin-right: 0 !important;
 }
+
+.fontcolor {
+	color: white !important;
+}
+
