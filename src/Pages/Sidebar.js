@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../StyleSheets/Sidebar.css";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import getUserType from "./getUserType";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 const Sidebar = () => {
-	const currUserEmail = auth.currentUser.email;
-	console.log(currUserEmail);
+	const currUserEmail = auth.currentUser.uid;
+	// console.log(currUserEmail);
+
+	const [userT, setUserT] = useState([]);
+
+	const getData = async () => {
+		try {
+			const userRef = doc(db, "Users", auth.currentUser.uid);
+			const userDoc = await getDoc(userRef);
+			if (userDoc.exists()) {
+				setUserT(userDoc.data().userType);
+				// console.log(userDoc.data());
+			} else {
+				console.log("No such document!");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		console.log("userId", auth.currentUser.uid);
+		getData();
+		// console.log("array", userT);
+		// console.log("userdata from  Function", userT);
+	}, [auth, userT]);
 
 	//student Menu
 	const studentMenu = [
@@ -64,8 +89,10 @@ const Sidebar = () => {
 		return dbtype;
 	}
 
-	const uType = addelement("teacher");
-
+	const uType = addelement(userT);
+	useEffect(() => {
+		// console.log(uType, uType);
+	}, [userT]);
 	return (
 		<div className="menu">
 			<div className="container-fluid">
@@ -76,15 +103,17 @@ const Sidebar = () => {
 						</div>
 
 						<ul className="nav navbar-nav side-bar" id="list">
-							{uType.map((item) => (
-								<li
-									className="side-bar tmargin sidebar-item"
-									id="title"
-									key={item.path}
-								>
-									<Link to={item.path}>{item.title}</Link>
-								</li>
-							))}
+							{userT &&
+								uType &&
+								uType.map((item) => (
+									<li
+										className="side-bar tmargin sidebar-item"
+										id="title"
+										key={item.path}
+									>
+										<Link to={item.path}>{item.title}</Link>
+									</li>
+								))}
 						</ul>
 					</div>
 				</div>

@@ -15,6 +15,8 @@ import Requests from "./Pages/Teacher/Requests";
 import List from "./Pages/Teacher/List";
 import Teachers from "./Pages/Admin/Teachers";
 import AllGroups from "./Pages/Admin/Allgroups";
+import ProjectDetails from "./Pages/Student/ProjectDetials";
+import AddMembers from "./Pages/Student/AddMembers";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -28,15 +30,15 @@ function App() {
 		console.log("is", auth);
 		// auth.signOut();
 		auth.onAuthStateChanged((user) => {
-			if (user) {
+			if (auth && user) {
 				setIsAuthenticate(true);
 			} else {
 				setIsAuthenticate(false);
 			}
 		});
-	});
+	}, []);
 
-	if (!isAuthenticate) {
+	if (!isAuthenticate && auth) {
 		return (
 			<Router>
 				<ToastContainer />
@@ -65,6 +67,8 @@ function App() {
 					<Route path="/list" element={<List />} />
 					<Route path="/allgroups" element={<AllGroups />} />
 					<Route path="/teachers" element={<Teachers />} />
+					<Route path="/projectdetails" element={<ProjectDetails />} />
+					<Route path="/addmembers" element={<AddMembers />} />
 				</Routes>
 			</Router>
 		);

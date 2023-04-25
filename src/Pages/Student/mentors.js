@@ -1,7 +1,7 @@
 import React from "react";
 
 const Mentor = () => {
-	const gMentor = "123456";
+	const gMentor = "";
 
 	if (gMentor == "") {
 		return (

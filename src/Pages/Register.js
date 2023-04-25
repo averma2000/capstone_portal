@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebaseConfig";
 import { Button } from "reactstrap";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+	addDoc,
+	collection,
+	doc,
+	getDocs,
+	query,
+	setDoc,
+	where,
+} from "firebase/firestore";
 import "../StyleSheets/LoginRegister.css";
 
 const Register = () => {
@@ -12,6 +20,7 @@ const Register = () => {
 	const [userType, setUserType] = useState("student");
 	const [id, setId] = useState("");
 	const [name, setName] = useState("");
+	const [power, setpower] = useState(false);
 
 	const signInButtonRef = useRef(null);
 
@@ -20,8 +29,8 @@ const Register = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log(email, password, userType);
-	});
+		// console.log(email, password, userType);
+	}, [auth]);
 
 	const handleRegister = () => {
 		if (!email || !password || !confirmpassword) {
@@ -32,12 +41,13 @@ const Register = () => {
 			.then(async (res) => {
 				console.log(res);
 				const user = res.user;
-
-				addDoc(collection(db, "User"), {
+				const userRef = doc(db, "Users", auth.currentUser.uid);
+				await setDoc(userRef, {
 					name: name,
 					id: id,
 					email: email,
 					userType: userType,
+					power: power,
 				});
 
 				navigate("/");

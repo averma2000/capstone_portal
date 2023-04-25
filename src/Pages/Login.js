@@ -42,18 +42,7 @@ const Login = () => {
 			<h1>Login</h1>
 
 			<div className="content">
-				<div className="input-field">
-					<select
-						name="userType"
-						id="userType"
-						value={userType}
-						onChange={(e) => setUserType(e.target.value)}
-					>
-						<option value="student">Student</option>
-						<option value="teacher">Teacher</option>
-						<option value="admin">Admin</option>
-					</select>
-				</div>
+				<div className="input-field"></div>
 				<div className="input-field">
 					<input
 						type="email"

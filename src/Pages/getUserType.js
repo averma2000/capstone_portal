@@ -1,6 +1,7 @@
 import { db } from "../firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
+
 const getUserType = async (currUserEmail) => {
 	try {
 		const querySnapshot = await db
@@ -9,6 +10,7 @@ const getUserType = async (currUserEmail) => {
 			.get();
 
 		let userType = querySnapshot[0].userType;
+
 		// querySnapshot.forEach((doc) => {
 		// 	userType = doc[0].data().userType;
 		// });
