@@ -5,8 +5,8 @@
 	-webkit-font-smoothing: antialiased;
 }
 
-body {
-	background: #c8baaa !important;
+.body {
+	background: #eeeeee;
 	font-family: "Rubik", sans-serif;
 }
 
@@ -18,18 +18,29 @@ body {
 	flex-direction: column;
 	align-self: center;
 	border-radius: 4px;
-	box-shadow: 0 2px 25px rgba(0, 0, 0, 0.2);
+	box-shadow: 10px 30px 70px rgba(0, 0, 0, 0.5);
+}
+
+.addmembers {
+	background: #fff;
+	width: 400px;
+	margin: 40px 700px;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+	border-radius: 4px;
+	box-shadow: 10px 30px 70px rgba(0, 0, 0, 0.5);
 }
 
 .register-form {
 	background: #fff;
 	width: 400px;
-	margin: auto;
+	margin: -30px auto;
 	display: flex;
 	flex-direction: column;
 	align-self: center;
 	border-radius: 4px;
-	box-shadow: 0 2px 25px rgba(0, 0, 0, 0.2);
+	box-shadow: 10px 30px 70px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
@@ -89,12 +100,29 @@ button {
 }
 
 .colorHilightBtn {
-	color: #e35869;
-	background-color: #2d3b55;
+	color: #eeeeee;
+	background-color: #172d46;
 }
 
 hr {
 	margin: 10px auto;
 
 	width: 85%;
+}
+
+.requestbtn button {
+	/* background-color: red; */
+	margin-top: 20px;
+	width: 150px;
+}
+
+.reqbtnsection {
+	/* background-color: red; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.reqbtnsection select {
+	width: 800px;
 }

@@ -42,15 +42,29 @@ const Register = () => {
 				console.log(res);
 				const user = res.user;
 				const userRef = doc(db, "Users", auth.currentUser.uid);
-				await setDoc(userRef, {
-					name: name,
-					id: id,
-					email: email,
-					userType: userType,
-					power: power,
-				});
+				if (userType == "student") {
+					await setDoc(userRef, {
+						name: name,
+						id: id,
+						email: email,
+						userType: userType,
+						power: power,
+						GroupId: "null",
+					});
 
-				navigate("/");
+					navigate("/mygroup");
+				} else {
+					await setDoc(userRef, {
+						name: name,
+						id: id,
+						email: email,
+						userType: userType,
+						approved: [],
+						requests: [],
+					});
+
+					navigate("/dashboard");
+				}
 			})
 			.catch((err) => {
 				console.log(err.message);

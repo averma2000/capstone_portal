@@ -6,9 +6,6 @@ import getUserType from "./getUserType";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 const Sidebar = () => {
-	const currUserEmail = auth.currentUser.uid;
-	// console.log(currUserEmail);
-
 	const [userT, setUserT] = useState([]);
 
 	const getData = async () => {
@@ -27,7 +24,6 @@ const Sidebar = () => {
 	};
 
 	useEffect(() => {
-		console.log("userId", auth.currentUser.uid);
 		getData();
 		// console.log("array", userT);
 		// console.log("userdata from  Function", userT);

@@ -70,7 +70,7 @@ html,
 body {
 	height: 100%;
 }
-body {
+/* body {
 	background: radial-gradient(
 			ellipse at center,
 			rgba(255, 118, 118, 0.75) 0%,
@@ -78,4 +78,4 @@ body {
 		)
 		no-repeat center center;
 	font-family: "Roboto", sans-serif;
-}
+} */

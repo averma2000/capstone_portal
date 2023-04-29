@@ -6,9 +6,8 @@
 }
 
 body {
-	background: #c8baaa !important;
+	background: #eeeeee;
 	font-family: "Rubik", sans-serif;
-	margin-left: 200px;
 }
 
 .mygroup {
@@ -40,7 +39,6 @@ h1 {
 
 .input-field {
 	padding: 12px 5px;
-	-moz-appearance: textfield;
 }
 input,
 select {
@@ -77,8 +75,8 @@ button {
 }
 
 .colorHilightBtn {
-	color: #e35869;
-	background-color: #2d3b55;
+	color: #eeeeee;
+	background-color: #172d46;
 }
 
 .createjoinbtn {

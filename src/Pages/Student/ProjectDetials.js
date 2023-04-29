@@ -1,11 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "reactstrap";
 import "../../StyleSheets/StudentGroup.css";
 
+import {
+	addDoc,
+	collection,
+	getDocs,
+	query,
+	where,
+	updateDoc,
+	doc,
+	setDoc,
+	getDoc,
+} from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
+
 const ProjectDetails = () => {
+	const navigate = useNavigate();
+
+	const [gid, setGid] = useState("");
 	const [projectName, setProjectName] = useState("");
 	const [projectDescription, setProjectDescription] = useState("");
+
+	async function getGroupId() {
+		const userRef = doc(db, "Users", auth.currentUser.uid);
+		console.log();
+	}
+
+	async function getUserData(currentUserUid, userId) {
+		const docRef = doc(db, "Users", auth.currentUser.uid);
+		const docSnap = await getDoc(docRef);
+		setGid(docSnap.data().GroupId);
+	}
+
+	useEffect(() => {
+		console.log(gid);
+		getUserData();
+	});
+
+	const addDetails = () => {
+		const docRef = doc(db, "Groups", gid);
+		const data = {
+			projectName: projectName,
+			projectDescription: projectDescription,
+		};
+		updateDoc(docRef, data).then(() => {
+			alert("Details has successfuly uploaded");
+		});
+		navigate("/addmembers");
+	};
 
 	return (
 		<form className="project-details">
@@ -38,7 +83,9 @@ const ProjectDetails = () => {
 				</div>
 			</div>
 			<div className="action">
-				<Button className="colorHilightBtn createjoinbtn">Submit</Button>
+				<button className="colorHilightBtn createjoinbtn" onClick={addDetails}>
+					Submit
+				</button>
 			</div>
 		</form>
 	);
