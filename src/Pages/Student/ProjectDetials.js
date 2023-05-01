@@ -41,6 +41,9 @@ const ProjectDetails = () => {
 	});
 
 	const addDetails = () => {
+		if (projectName == "" || projectDescription == "") {
+			alert("Please fill all the fields");
+		}
 		const docRef = doc(db, "Groups", gid);
 		const data = {
 			projectName: projectName,

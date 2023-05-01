@@ -36,6 +36,8 @@ const Register = () => {
 		if (!email || !password || !confirmpassword) {
 			alert("Fill all fields");
 			return;
+		} else if (password.length < 6) {
+			alert("Password is less than 6 characters");
 		}
 		createUserWithEmailAndPassword(auth, email, password)
 			.then(async (res) => {

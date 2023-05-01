@@ -32,12 +32,13 @@ const Login = () => {
 					Navigate("/mygroup");
 				} else if (userType == "teacher") {
 					Navigate("/dashboard");
-				} else {
+				} else if (userType == "admin") {
 					Navigate("/allgroups");
 				}
 			})
 			.catch((err) => {
 				console.log(err.message);
+				alert("Invalid Credentials, Please try again");
 			});
 	};
 	return (

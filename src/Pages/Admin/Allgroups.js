@@ -28,7 +28,7 @@ const AllGroups = () => {
 		fetchGroups();
 	}, []);
 	return (
-		<div className="page">
+		<div className="page ">
 			<h1>Welcome to All Groups Section</h1>
 
 			<h3>all groups will be displayed here</h3>

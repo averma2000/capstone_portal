@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import "../StyleSheets/Sidebar.css";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { Button } from "reactstrap";
-import { auth } from "../firebaseConfig";
 
 const Navbar = () => {
 	const currUserId = auth.currentUser.uid;

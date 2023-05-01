@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { Button } from "reactstrap";
+import { Alert, Button } from "reactstrap";
 import "../../StyleSheets/LoginRegister.css";
 
 import {
@@ -63,7 +63,9 @@ const AddMembers = () => {
 
 	const addMember = async (e) => {
 		e.preventDefault();
-
+		if (user1 == "" || user2 == "" || user3 == "") {
+			alert("Please fill all the fields");
+		}
 		const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
 
 		if (checkRollNos(users, allUsers)) {
