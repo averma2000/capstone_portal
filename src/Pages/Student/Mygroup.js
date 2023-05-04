@@ -14,6 +14,7 @@ import {
 	updateDoc,
 	doc,
 	getDoc,
+	arrayUnion,
 } from "firebase/firestore";
 
 import "../../StyleSheets/StudentGroup.css";
@@ -23,14 +24,14 @@ const Mygroup = () => {
 	const navigate = useNavigate();
 	const currUserEmail = auth.currentUser.email;
 	const currUserUid = auth.currentUser.uid;
-	console.log(currUserEmail);
-	const [groupId, setGroupId] = useState("");
+	// console.log(currUserEmail);
+
 	const [Gid, setGid] = useState("");
 	const [projectName, setProjectName] = useState("");
 	const [projectDescription, setProjectDescription] = useState("");
-	const [documentRef, setDocumentRef] = useState("");
 
-	const [modules, setModules] = useState([{ moduleName: "" }]);
+	const [moduleName, setModuleName] = useState("");
+	const [allModule, setAllModule] = useState([]);
 
 	const handleCreateGroup = async (e) => {
 		console.log("createGroup function called");
@@ -44,100 +45,97 @@ const Mygroup = () => {
 				mentorName: "pending",
 				mentorId: "pending",
 				modules: [],
+				remarks: [],
 			}).then((res) => {
 				const userRef = doc(db, "Users", currUserUid);
 				updateDoc(userRef, { ["power"]: true });
 				updateDoc(userRef, { ["GroupId"]: res.id });
 			});
 		} else {
-			console.log("A group with the same superUser already exists.");
+			// console.log("A group with the same superUser already exists.");
 		}
 
 		navigate("/projectdetails");
 	};
 
 	const uRef = doc(db, "Users", currUserUid);
-	// getDocs(uRef)
-	// 	.then((doc) => {
-	// 		if (doc.exists) {
-	// 			const myGroupId = doc.data().GroupId;
-	// 			console.log("My Group Id", myGroupId);
-	// 		} else {
-	// 			console.log("No such document!");
-	// 		}
-	// 	})
-	// 	.catch((error) => {
-	// 		console.log("Error getting document:", error);
-	// 	});
-
-	// async function getGroupId() {
-	// 	const querySnapshot = await getDocs(
-	// 		query(collection(db, "Groups"), where("superUser", "==", currUserEmail))
-	// 	);
-	// 	console.log("My Group Id", querySnapshot);
-
-	// 	if (querySnapshot.empty) {
-	// 		console.log("No groups found for this user.");
-	// 		setGid("null");
-	// 	} else {
-	// 		const groupDoc = querySnapshot.docs[0];
-	// 		const groupId = groupDoc.uid;
-	// 		// console.log("Group ID:", groupId);
-	// 		setGid(groupId);
-	// 	}
-	// }
 
 	const getGroupId = async (email) => {
 		const userRef = collection(db, "Users");
 		const q = query(userRef, where("email", "==", email));
 		const querySnapshot = await getDocs(q);
 		if (querySnapshot.empty) {
-			console.log("No user found with email:", email);
+			// console.log("No user found with email:", email);
 			setGid("null");
 		} else {
 			const userDoc = querySnapshot.docs[0];
 			const userData = userDoc.data();
 			const groupId = userData.GroupId;
 
-			console.log("Gid", userData);
+			// console.log("Gid", userData);
 
 			setGid(groupId);
 		}
 	};
 
 	const getGroupinfo = async (groupId) => {
-		const groupRef = doc(db, "Groups", groupId); // replace 'db' with your Firestore database instance
-		console.log("Group Ref:", groupRef);
+		const groupRef = doc(db, "Groups", groupId);
+		// console.log("Group Ref:", groupRef);
 
 		const groupDoc = await getDoc(groupRef);
-		console.log("Group Doc:", groupDoc);
+		// console.log("Group Doc:", groupDoc);
 
 		if (groupDoc.exists()) {
 			const { projectDescription, projectName } = groupDoc.data();
-			console.log(`Project Name: ${projectName}`);
-			console.log(`Project Description: ${projectDescription}`);
+			// console.log(`Project Name: ${projectName}`);
+			// console.log(`Project Description: ${projectDescription}`);
 			setProjectDescription(projectDescription);
 			setProjectName(projectName);
 		} else {
-			console.log("No such document!");
+			// console.log("No such document!");
 		}
 	};
+
+	const addModule = async () => {
+		const docRef = doc(db, "Groups", Gid);
+		const moduleDoc = await getDoc(docRef);
+		const moduleData = moduleDoc.data().modules;
+		// console.log(typeof moduleData);
+		const newModuleData = moduleName;
+		updateDoc(docRef, {
+			modules: arrayUnion(newModuleData),
+		});
+
+		alert("test");
+	};
+
+	const addStatus = async () => {
+		const docRef = doc(db, "Groups", Gid);
+		const moduleDoc = await getDoc(docRef);
+		const moduleData = moduleDoc.data().modules;
+		// console.log(typeof moduleData);
+		const newModuleData = moduleName;
+		updateDoc(docRef, {
+			completed: arrayUnion(false),
+		});
+
+		alert("test");
+	};
+
+	const showModules = async () => {
+		const docRef = doc(db, "Groups", Gid);
+		const moduleDoc = await getDoc(docRef);
+		const moduleData = moduleDoc.data().modules;
+		setAllModule(moduleData);
+	};
+	console.log("module data", allModule);
 
 	useEffect(() => {
 		getGroupId(currUserEmail);
 		getGroupinfo(Gid);
-	});
+		showModules();
+	}, []);
 
-	const handleStudentAdd = () => {
-		setModules([...modules, { ModuleName: "" }]);
-	};
-	const HndleStudentRemove = (index) => {
-		const list = [...modules];
-		list.splice(index, 1);
-		setModules(list);
-	};
-
-	// console.log("gid value", Gid);
 	if (Gid == "null") {
 		return (
 			<div className="mygroup">
@@ -164,7 +162,6 @@ const Mygroup = () => {
 				<div className="myModulehead">
 					<h2>Project details</h2>
 				</div>
-
 				<hr />
 				<div className="myModulehead">
 					<h3>
@@ -182,37 +179,32 @@ const Mygroup = () => {
 				<div className="myModulehead">
 					<h3>Project Modules</h3>
 				</div>
+
 				<div className="myModules">
-					{modules.map((singlemodule, index) => (
-						<div className="student-info" key={index}>
-							<div className="student-credentials">
-								<input
-									name="student"
-									type="text"
-									placeholder="Name"
-									className="input-box student-cred-input"
-								/>
-								<button className="mybutton">Save </button>
-
-								{modules.length > 1 && (
-									<button
-										type="button"
-										className="Student-remove-btn"
-										onClick={() => HndleStudentRemove(index)}
-									>
-										<span>X</span>
-									</button>
-								)}
-							</div>
-						</div>
-					))}
-
-					<div className="submitbtn">
-						{modules.length < 10 && (
-							<button onClick={handleStudentAdd} className="mybutton">
-								Add Module
+					<h3>added modules shown here</h3>
+					<ol>
+						{allModule.map((module) => (
+							<li key={module.id} className="listelement">
+								<h4>{module}</h4>
+							</li>
+						))}
+					</ol>
+				</div>
+				<div className="myModules">
+					<div className="student-info">
+						<div className="student-credentials">
+							<input
+								name="student"
+								type="text"
+								placeholder="Name"
+								className="input-box student-cred-input"
+								value={moduleName}
+								onChange={(e) => setModuleName(e.target.value)}
+							/>
+							<button className="mybutton" onClick={addModule}>
+								Save
 							</button>
-						)}
+						</div>
 					</div>
 				</div>
 			</div>

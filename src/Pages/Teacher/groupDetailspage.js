@@ -109,7 +109,6 @@ const GroupDetails = () => {
 					{allModule.map((module) => (
 						<li key={module.id} className="listelement">
 							<h4>{module}</h4>
-							<h5>{</h5>
 						</li>
 					))}
 				</ol>

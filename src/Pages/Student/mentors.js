@@ -10,11 +10,14 @@ import {
 	updateDoc,
 	doc,
 	getDoc,
+	arrayUnion,
 } from "firebase/firestore";
+import { Button } from "reactstrap";
 
 const Mentor = () => {
 	const [gMentor, setgMentor] = useState("pending");
 	const [allMentor, setAllMentor] = useState([]);
+	const [groupId, setGroupId] = useState("");
 	const currUserEmail = auth.currentUser.email;
 
 	const getGroupId = async (email) => {
@@ -27,12 +30,13 @@ const Mentor = () => {
 			const userDoc = querySnapshot.docs[0];
 			const userData = userDoc.data();
 			const gid = userData.GroupId;
-			// console.log("My group", gid);
-
+			console.log("My group", gid);
+			setGroupId(gid);
+			console.log(groupId);
 			const groupRef = doc(db, "Groups", gid);
 			const groupDoc = await getDoc(groupRef);
-			const valmentor = groupDoc.data().mentor;
-			// console.log(valmentor);
+			const valmentor = groupDoc.data().mentorId;
+			console.log("val mentor", valmentor);
 			setgMentor(valmentor);
 		}
 	};
@@ -49,14 +53,28 @@ const Mentor = () => {
 	};
 
 	useEffect(() => {
+		getGroupId(currUserEmail);
 		getAllMentor();
+
 		console.log(allMentor);
 		// getGroupId(currUserEmail);
 	}, []);
 
 	const mentor = getAllMentor(currUserEmail);
 
-	// console.log("all my mentors", allMentor);
+	async function sendRequest(email) {
+		const usersRef = collection(db, "Users");
+		const q = query(usersRef, where("email", "==", email));
+		const querySnapshot = await getDocs(q);
+		if (querySnapshot.empty) {
+			// console.log(`No mentor found with email ${email}.`);
+		} else {
+			const mentorDoc = querySnapshot.docs[0];
+			const mentorRef = doc(db, "Users", mentorDoc.id);
+			await updateDoc(mentorRef, { requests: arrayUnion(groupId) });
+		}
+	}
+
 	if (gMentor == "pending") {
 		return (
 			<div className="page">
@@ -65,23 +83,36 @@ const Mentor = () => {
 				<hr />
 				<br />
 				<br />
-				<div className="reqbtnsection">
-					<select name="mentor" id="mentor">
-						{allMentor.map((mentor) => (
-							<option key={mentor.id}>
-								<h2>
-									Name: {mentor.name} --- Email: {mentor.email}
-								</h2>
-								{/* <p>{mentor.email}</p> */}
-							</option>
-						))}
-					</select>
-				</div>
-				<div className="reqbtnsection">
-					<div className="requestbtn">
-						<button className="colorHilightBtn">Request</button>
-					</div>
-				</div>
+				<ul>
+					{allMentor.map((mentor) => (
+						<li key={mentor.id} className="listelement">
+							{/* <h2>{group.name}</h2>
+					<p>{group.description}</p> */}
+
+							<div class="wrapper">
+								<div class="container">
+									<div class="card">
+										<header class="card-header">
+											<h2 class="card-title">{mentor.name}</h2>
+										</header>
+										<div class="card-body">
+											<p class="card-content">{mentor.email}</p>
+										</div>
+										<footer class="card-footer">
+											<Button
+												href="#"
+												class="card-link"
+												onClick={sendRequest.bind(this, mentor.email)}
+											>
+												Request
+											</Button>
+										</footer>
+									</div>
+								</div>
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 		);
 	} else {

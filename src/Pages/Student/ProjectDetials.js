@@ -43,21 +43,22 @@ const ProjectDetails = () => {
 	const addDetails = () => {
 		if (projectName == "" || projectDescription == "") {
 			alert("Please fill all the fields");
+		} else {
+			const docRef = doc(db, "Groups", gid);
+			const data = {
+				projectName: projectName,
+				projectDescription: projectDescription,
+			};
+			updateDoc(docRef, data).then(() => {
+				alert("Details has successfuly uploaded");
+			});
+			navigate("/addmembers");
 		}
-		const docRef = doc(db, "Groups", gid);
-		const data = {
-			projectName: projectName,
-			projectDescription: projectDescription,
-		};
-		updateDoc(docRef, data).then(() => {
-			alert("Details has successfuly uploaded");
-		});
-		navigate("/addmembers");
 	};
 
 	return (
 		<form className="project-details">
-			<h1>Login</h1>
+			<h1>Project Details</h1>
 
 			<div className="content">
 				<div className="input-field">

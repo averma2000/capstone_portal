@@ -13,11 +13,14 @@ import {
 	onSnapshot,
 } from "firebase/firestore";
 import "../../StyleSheets/teacherDashboard.css";
+import { useNavigate, Link } from "react-router-dom";
 
 const Dashboard = () => {
 	const currUserId = auth.currentUser.uid;
 	const [mentorId, setMentorId] = useState(null);
 	const [groups, setGroups] = useState([]);
+
+	const navigate = useNavigate();
 
 	async function getIdByUid(uid) {
 		const docRef = doc(db, "Users", uid);
@@ -27,6 +30,11 @@ const Dashboard = () => {
 		console.log("Document id:", data.id);
 		setMentorId(data.id);
 	}
+
+	// const handleNavigate = (id) => {
+	// 	console.log("id", id);
+	// 	navigate("/groupdetails", { state: { id: id } });
+	// };
 
 	useEffect(() => {
 		getIdByUid(currUserId);
@@ -65,7 +73,11 @@ const Dashboard = () => {
 									<p className="card-content">{doc.projectDescription}</p>
 								</div>
 								<footer className="card-footer">
-									<a href="#" className="card-link">
+									<a
+										href="#"
+										className="card-link"
+										onClick={() => navigate(`/groupdetails/${doc.id}`)}
+									>
 										View
 									</a>
 								</footer>

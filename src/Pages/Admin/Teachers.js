@@ -15,6 +15,23 @@ import { Button } from "reactstrap";
 const Teachers = () => {
 	const [allMentor, setAllMentor] = useState([]);
 
+	const groupsRef = collection(db, "Groups"); // Reference to the "Groups" collection in Firestore
+
+	async function getGroupsByUID(uids) {
+		const groups = [];
+
+		for (const uid of uids) {
+			const query = doc(groupsRef, uid);
+			const snapshot = await getDocs(query);
+
+			if (snapshot.exists()) {
+				const data = snapshot.data();
+				groups.push(data);
+			}
+		}
+
+		return groups;
+	}
 	useEffect(() => {
 		const getAllMentor = async () => {
 			const usersRef = collection(db, "Users");

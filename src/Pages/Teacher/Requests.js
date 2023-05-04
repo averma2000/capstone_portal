@@ -1,60 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { collection, query, where, getDoc, doc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 import { Button } from "reactstrap";
 
 const Requests = () => {
-	const tableStyle = {
-		border: "1px solid black",
-	};
-	const thStyle = {
-		border: "1px solid black",
-		backgroundColor: "#eee",
-	};
+	const [reqs, setReqs] = useState([]);
+	const [groupInfo, setGroupInfo] = useState([]);
 
-	const tdStyle = {
-		border: "1px solid black",
-		padding: "8px",
-	};
+	useEffect(() => {
+		async function fetchRequest() {
+			const docref = doc(db, "Users", auth.currentUser.uid);
+			const docteach = await getDoc(docref);
+			const req = docteach.data().requests;
+			setReqs(req);
+		}
+		fetchRequest();
+
+		// console.log("group", groupInfo);
+	}, []);
+
+	useEffect(() => {
+		async function getGroupDocs() {
+			for (let index = 0; index < reqs.length; index++) {
+				const groupRef = doc(db, "Groups", reqs[index]);
+				const docGroup = await getDoc(groupRef);
+				console.log(docGroup.data().projectName);
+				const name = docGroup.data().projectName;
+				const description = docGroup.data().projectDescription;
+				const gid = reqs[index];
+
+				setGroupInfo((info) => [
+					...info,
+					{
+						id: gid,
+						projectName: name,
+						projectDescription: description,
+					},
+				]);
+			}
+		}
+		getGroupDocs();
+	}, [reqs]);
+
 	return (
 		<div className="page">
 			<h1>Welcome to Request page</h1>
 
-			<h3>all requests from any group will be displayed here</h3>
+			<ul>
+				{groupInfo.map((info) => (
+					<li key={info.id} className="listelement">
+						{/* <h2>{group.name}</h2>
+					<p>{group.description}</p> */}
 
-			<table style={tableStyle}>
-				<tr>
-					<th style={tableStyle}>Project Name</th>
-					<th style={tableStyle}>project Description</th>
-					<th style={tableStyle}>-</th>
-					<th style={tableStyle}>-</th>
-					<th style={tableStyle}>-</th>
-				</tr>
-				<tr>
-					<td style={tdStyle}>project 1</td>
-					<td style={tdStyle}>project description 1</td>
-					<td style={tdStyle}>
-						<button>View</button>
-					</td>
-					<td style={tdStyle}>
-						<button>Accept</button>
-					</td>
-					<td style={tdStyle}>
-						<button>Reject</button>
-					</td>
-				</tr>
-				<tr>
-					<td style={tdStyle}>project 2</td>
-					<td style={tdStyle}>project description 1</td>
-					<td style={tdStyle}>
-						<Button>View</Button>
-					</td>
-					<td style={tdStyle}>
-						<Button>Accept</Button>
-					</td>
-					<td style={tdStyle}>
-						<Button>Reject</Button>
-					</td>
-				</tr>
-			</table>
+						<div class="wrapper">
+							<div class="container">
+								<div class="card">
+									<header class="card-header">
+										<h2 class="card-title">{info.projectName}</h2>
+									</header>
+									<div class="card-body">
+										<p class="card-content">{info.projectDescription}</p>
+									</div>
+									<footer class="card-footer">
+										<Button href="#" class="card-link">
+											Approve
+										</Button>
+										<Button href="#" class="card-link">
+											Decline
+										</Button>
+									</footer>
+								</div>
+							</div>
+						</div>
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };
