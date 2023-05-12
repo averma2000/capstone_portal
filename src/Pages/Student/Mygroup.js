@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { v4 as uuid } from "uuid";
 import { Button } from "reactstrap";
 import { auth, db } from "../../firebaseConfig";
 
@@ -15,6 +14,7 @@ import {
 	doc,
 	getDoc,
 	arrayUnion,
+	arrayRemove,
 } from "firebase/firestore";
 
 import "../../StyleSheets/StudentGroup.css";
@@ -32,6 +32,10 @@ const Mygroup = () => {
 
 	const [moduleName, setModuleName] = useState("");
 	const [allModule, setAllModule] = useState([]);
+	const [completedModule, setCompletedModule] = useState([]);
+	const [myRemarks, setMyRemarks] = useState([]);
+	const [myProgress, setMyProgress] = useState("");
+	const [myPower, setMyPower] = useState("");
 
 	const handleCreateGroup = async (e) => {
 		console.log("createGroup function called");
@@ -128,13 +132,107 @@ const Mygroup = () => {
 		const moduleData = moduleDoc.data().modules;
 		setAllModule(moduleData);
 	};
-	console.log("module data", allModule);
+	// console.log("module data", allModule);
+
+	const showCompletedModules = async () => {
+		const docRef = doc(db, "Groups", Gid);
+		const completedmoduleDoc = await getDoc(docRef);
+		const completedmoduleData = completedmoduleDoc.data().completed;
+		setCompletedModule(completedmoduleData);
+	};
+
+	const showRemarks = async () => {
+		const docRef = doc(db, "Groups", Gid);
+		const remarksDoc = await getDoc(docRef);
+		const remarksData = remarksDoc.data().remarks;
+		setMyRemarks(remarksData);
+	};
+
+	// console.log("my remarks : ", myRemarks);
+	const moveToComplete = async (groupid, currModule) => {
+		const docRef = doc(db, "Groups", groupid);
+
+		// Remove the student ID from the requests array
+		await updateDoc(docRef, {
+			modules: arrayRemove(currModule),
+		});
+
+		// Add the student ID to the approved array
+		await updateDoc(docRef, {
+			completed: arrayUnion(currModule),
+		});
+
+		alert("Modules updated successfully!");
+	};
 
 	useEffect(() => {
 		getGroupId(currUserEmail);
-		getGroupinfo(Gid);
-		showModules();
 	}, []);
+
+	useEffect(() => {
+		getGroupinfo(Gid);
+	}, [Gid]);
+
+	// console.log("description", projectDescription);
+	useEffect(() => {
+		showModules();
+	}, [projectName]);
+
+	useEffect(() => {
+		showCompletedModules();
+	}, [projectName]);
+
+	useEffect(() => {
+		showRemarks();
+	}, [projectName]);
+
+	// console.log("added modules :", allModule.length);
+	// console.log("completed modules :", completedModule.length);
+
+	useEffect(() => {
+		const progress =
+			(completedModule.length * 100) /
+			(allModule.length + completedModule.length);
+		setMyProgress(Math.round(progress));
+		// console.log("percentage :", Math.round(progress));
+	}, [completedModule, allModule]);
+
+	const fetchPower = async () => {
+		const usersCollection = collection(db, "Users");
+		const userDocRef = doc(usersCollection, auth.currentUser.uid);
+		const userSnapshot = await getDoc(userDocRef);
+		if (userSnapshot.exists()) {
+			// Access the "power" field value
+			const power = userSnapshot.data().power;
+			setMyPower(power);
+			// console.log("my power : ", power);
+		}
+	};
+	useEffect(() => {
+		fetchPower();
+	}, []);
+
+	const editInfo = () => {
+		if (myPower == true) {
+			return (
+				<div className="student-info">
+					<div className="student-credentials">
+						<input
+							name="student"
+							type="text"
+							placeholder="Add New Module"
+							className="input-box student-cred-input"
+							value={moduleName}
+							onChange={(e) => setModuleName(e.target.value)}
+						/>
+						<Button className="mybutton" onClick={addModule}>
+							Save
+						</Button>
+					</div>
+				</div>
+			);
+		}
+	};
 
 	if (Gid == "null") {
 		return (
@@ -177,6 +275,11 @@ const Mygroup = () => {
 				</div>
 				<hr />
 				<div className="myModulehead">
+					<h3>Project Progress........................{myProgress}%</h3>
+				</div>
+
+				<hr />
+				<div className="myModulehead">
 					<h3>Project Modules</h3>
 				</div>
 
@@ -184,28 +287,37 @@ const Mygroup = () => {
 					<h3>added modules shown here</h3>
 					<ol>
 						{allModule.map((module) => (
+							<li key={module} className="listelement">
+								<h4>{module}</h4>
+								<Button onClick={() => moveToComplete(Gid, module)}>
+									Complete
+								</Button>
+							</li>
+						))}
+					</ol>
+				</div>
+				<div className="myModules">{editInfo()}</div>
+
+				<div className="myModules">
+					<h3>Modules Completed</h3>
+					<ol>
+						{completedModule.map((module) => (
 							<li key={module.id} className="listelement">
 								<h4>{module}</h4>
 							</li>
 						))}
 					</ol>
 				</div>
+
 				<div className="myModules">
-					<div className="student-info">
-						<div className="student-credentials">
-							<input
-								name="student"
-								type="text"
-								placeholder="Name"
-								className="input-box student-cred-input"
-								value={moduleName}
-								onChange={(e) => setModuleName(e.target.value)}
-							/>
-							<button className="mybutton" onClick={addModule}>
-								Save
-							</button>
-						</div>
-					</div>
+					<h3>Remarks</h3>
+					<ol>
+						{myRemarks.map((remark) => (
+							<li key={remark} className="listelement">
+								<h4>{remark}</h4>
+							</li>
+						))}
+					</ol>
 				</div>
 			</div>
 		);

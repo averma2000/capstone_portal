@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { auth } from "./firebaseConfig";
-import GroupDetails from "./Pages/Teacher/groupDetailspage";
+import GroupDetails from "./Pages/groupDetailspage";
 
 function App() {
 	const [isAuthenticate, setIsAuthenticate] = useState(false);

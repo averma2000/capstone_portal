@@ -11,10 +11,11 @@ import {
 	getDoc,
 } from "firebase/firestore";
 import { Button } from "reactstrap";
+import { useNavigate } from "react-router-dom";
 
 const AllGroups = () => {
 	const [groups, setGroups] = useState([]);
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		async function fetchGroups() {
 			const querySnapshot = await getDocs(collection(db, "Groups"));
@@ -48,7 +49,13 @@ const AllGroups = () => {
 										<p class="card-content">{group.description}</p>
 									</div>
 									<footer class="card-footer">
-										<Button href="#" class="card-link">
+										<Button
+											href="#"
+											class="card-link"
+											onClick={() => {
+												navigate(`/groupdetails/${group.id}`);
+											}}
+										>
 											View
 										</Button>
 										<Button href="#" class="card-link">

@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDoc, doc } from "firebase/firestore";
+import {
+	collection,
+	query,
+	where,
+	getDoc,
+	doc,
+	updateDoc,
+	arrayRemove,
+	arrayUnion,
+} from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 import { Button } from "reactstrap";
 
 const Requests = () => {
 	const [reqs, setReqs] = useState([]);
 	const [groupInfo, setGroupInfo] = useState([]);
+	const [groupId, setGroupId] = useState("");
 
 	useEffect(() => {
 		async function fetchRequest() {
@@ -42,6 +52,32 @@ const Requests = () => {
 		getGroupDocs();
 	}, [reqs]);
 
+	const approveRequest = async (teacherId, studentId) => {
+		const docRef = doc(db, "Users", teacherId);
+
+		// Remove the student ID from the requests array
+		await updateDoc(docRef, {
+			requests: arrayRemove(studentId),
+		});
+
+		// Add the student ID to the approved array
+		await updateDoc(docRef, {
+			approved: arrayUnion(studentId),
+		});
+
+		alert("Request approved successfully!");
+	};
+
+	const declineRequest = async (teacherId, studentId) => {
+		const docRef = doc(db, "Users", teacherId);
+
+		// Remove the student ID from the requests array
+		await updateDoc(docRef, {
+			requests: arrayRemove(studentId),
+		});
+
+		alert("Request declined successfully!");
+	};
 	return (
 		<div className="page">
 			<h1>Welcome to Request page</h1>
@@ -62,10 +98,22 @@ const Requests = () => {
 										<p class="card-content">{info.projectDescription}</p>
 									</div>
 									<footer class="card-footer">
-										<Button href="#" class="card-link">
+										<Button
+											href="#"
+											class="card-link"
+											onClick={() =>
+												approveRequest(auth.currentUser.uid, info.id)
+											}
+										>
 											Approve
 										</Button>
-										<Button href="#" class="card-link">
+										<Button
+											href="#"
+											class="card-link"
+											onClick={() =>
+												declineRequest(auth.currentUser.uid, info.id)
+											}
+										>
 											Decline
 										</Button>
 									</footer>

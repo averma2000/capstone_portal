@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { auth, db } from "../../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 
 import {
 	addDoc,
@@ -14,21 +14,24 @@ import {
 	arrayUnion,
 } from "firebase/firestore";
 
-import "../../StyleSheets/StudentGroup.css";
-import "../../StyleSheets/MyGroup.css";
+import "../StyleSheets/StudentGroup.css";
+import "../StyleSheets/MyGroup.css";
 
 const GroupDetails = () => {
 	const navigate = useNavigate();
 	const currUserEmail = auth.currentUser.email;
 	const currUserUid = auth.currentUser.uid;
 	// console.log(currUserEmail);
+	const [myProgress, setMyProgress] = useState("");
 
 	const [projectName, setProjectName] = useState("");
 	const [projectDescription, setProjectDescription] = useState("");
 	const [allRemarks, setAllRemarks] = useState([]);
+	const [completedModule, setCompletedModule] = useState([]);
 
 	const [allModule, setAllModule] = useState([]);
 	const [remark, setRemark] = useState("");
+	const [myRemarks, setMyRemarks] = useState([]);
 
 	const uRef = doc(db, "Users", currUserUid);
 	// const location = useLocation();
@@ -38,7 +41,7 @@ const GroupDetails = () => {
 	// }
 
 	const { id } = useParams();
-	console.log("id", id);
+	// console.log("id", id);
 	const getGroupinfo = async (groupId) => {
 		const groupRef = doc(db, "Groups", groupId);
 		// console.log("Group Ref:", groupRef);
@@ -54,11 +57,22 @@ const GroupDetails = () => {
 		setProjectDescription(projectDescription);
 		setProjectName(projectName);
 		setAllRemarks(remarks);
-		console.log("modules", allRemarks);
+		// console.log("modules", allRemarks);
 	};
 
+	const showCompletedModules = async () => {
+		const docRef = doc(db, "Groups", id);
+		const completedmoduleDoc = await getDoc(docRef);
+		const completedmoduleData = completedmoduleDoc.data().completed;
+		setCompletedModule(completedmoduleData);
+	};
+	const showRemarks = async () => {
+		const docRef = doc(db, "Groups", id);
+		const remarksDoc = await getDoc(docRef);
+		const remarksData = remarksDoc.data().remarks;
+		setMyRemarks(remarksData);
+	};
 	const addRemark = async () => {
-		alert("chala");
 		const docRef = doc(db, "Groups", id);
 		const moduleDoc = await getDoc(docRef);
 		const moduleData = moduleDoc.data().remarks;
@@ -68,18 +82,33 @@ const GroupDetails = () => {
 			remarks: arrayUnion(remark),
 		});
 
-		alert("test");
+		alert("Remarks list Updated");
 	};
 
-	console.log(allModule);
+	// console.log(allModule);
 
 	useEffect(() => {
 		// getGroupId();
 		getGroupinfo(id);
 	}, []);
 
-	console.log("all remarks", allRemarks);
+	useEffect(() => {
+		showCompletedModules();
+	}, [projectName]);
 
+	useEffect(() => {
+		showRemarks();
+	}, [projectName]);
+
+	// console.log("all remarks", allRemarks);
+
+	useEffect(() => {
+		const progress =
+			(completedModule.length * 100) /
+			(allModule.length + completedModule.length);
+		setMyProgress(Math.round(progress));
+		// console.log("percentage :", Math.round(progress));
+	}, [completedModule, allModule]);
 	return (
 		<div className="page">
 			<div className="myModulehead">
@@ -98,6 +127,11 @@ const GroupDetails = () => {
 				</h3>
 				<h3>{projectDescription}</h3>
 			</div>
+			<hr />
+			<div className="myModulehead">
+				<h3>Project Progress........................{myProgress}%</h3>
+			</div>
+
 			<hr />
 			<div className="myModulehead">
 				<h3>Project Modules</h3>
@@ -131,6 +165,27 @@ const GroupDetails = () => {
 						</button>
 					</div>
 				</div>
+			</div>
+			<div className="myModules">
+				<h3>Modules Completed</h3>
+				<ol>
+					{completedModule.map((module) => (
+						<li key={module.id} className="listelement">
+							<h4>{module}</h4>
+						</li>
+					))}
+				</ol>
+			</div>
+
+			<div className="myModules">
+				<h3>Remarks</h3>
+				<ol>
+					{myRemarks.map((remark) => (
+						<li key={remark} className="listelement">
+							<h4>{remark}</h4>
+						</li>
+					))}
+				</ol>
 			</div>
 		</div>
 	);

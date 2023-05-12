@@ -32,7 +32,7 @@ const Login = () => {
 					Navigate("/mygroup");
 				} else if (userType == "teacher") {
 					Navigate("/dashboard");
-				} else if (userType == "admin") {
+				} else {
 					Navigate("/allgroups");
 				}
 			})
@@ -56,7 +56,7 @@ const Login = () => {
 						>
 							<option value="student">Student</option>
 							<option value="teacher">Teacher</option>
-							<option value="teacher">Admin</option>
+							<option value="admin">Admin</option>
 						</select>
 					</div>
 					<div className="input-field"></div>
