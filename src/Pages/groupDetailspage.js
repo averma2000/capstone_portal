@@ -114,31 +114,29 @@ const GroupDetails = () => {
 			<div className="myModulehead">
 				<h2>Project details</h2>
 			</div>
-			<hr />
+
 			<div className="myModulehead">
-				<h3>
-					<u>Project name</u> : {projectName}
-				</h3>
+				<h3>Project name : {projectName}</h3>
 			</div>
-			<hr />
+
 			<div className="myModulehead">
 				<h3>
-					<u>Project Description</u> : <br />
+					Project Description : <br />
 				</h3>
+				<hr />
 				<h3>{projectDescription}</h3>
 			</div>
-			<hr />
+
 			<div className="myModulehead">
 				<h3>Project Progress........................{myProgress}%</h3>
 			</div>
 
-			<hr />
 			<div className="myModulehead">
 				<h3>Project Modules</h3>
 			</div>
 
 			<div className="myModules">
-				<h3>added modules shown here</h3>
+				<h3>Added Modules </h3>
 				<ol>
 					{allModule.map((module) => (
 						<li key={module.id} className="listelement">

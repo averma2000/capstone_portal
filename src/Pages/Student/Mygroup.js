@@ -260,31 +260,26 @@ const Mygroup = () => {
 				<div className="myModulehead">
 					<h2>Project details</h2>
 				</div>
-				<hr />
 				<div className="myModulehead">
 					<h3>
 						<u>Project name</u> : {projectName}
 					</h3>
 				</div>
-				<hr />
 				<div className="myModulehead">
 					<h3>
-						<u>Project Description</u> : <br />
+						<u>Project Description</u> : {projectDescription}
 					</h3>
-					<h3>{projectDescription}</h3>
 				</div>
-				<hr />
 				<div className="myModulehead">
 					<h3>Project Progress........................{myProgress}%</h3>
 				</div>
 
-				<hr />
 				<div className="myModulehead">
 					<h3>Project Modules</h3>
 				</div>
 
 				<div className="myModules">
-					<h3>added modules shown here</h3>
+					<h3>Incomplete Modules</h3>
 					<ol>
 						{allModule.map((module) => (
 							<li key={module} className="listelement">
@@ -299,7 +294,7 @@ const Mygroup = () => {
 				<div className="myModules">{editInfo()}</div>
 
 				<div className="myModules">
-					<h3>Modules Completed</h3>
+					<h3>Completed Modules</h3>
 					<ol>
 						{completedModule.map((module) => (
 							<li key={module.id} className="listelement">

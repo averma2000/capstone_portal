@@ -14,8 +14,8 @@ import {
 import { Button } from "reactstrap";
 import "../../StyleSheets/table.css";
 
-const Teachers = () => {
-	const [allMentor, setAllMentor] = useState([]);
+const Students = () => {
+	const [allStudents, setAllStudents] = useState([]);
 
 	const groupsRef = collection(db, "Groups"); // Reference to the "Groups" collection in Firestore
 
@@ -37,34 +37,32 @@ const Teachers = () => {
 	useEffect(() => {
 		const getAllMentor = async () => {
 			const usersRef = collection(db, "Users");
-			const q = query(usersRef, where("userType", "==", "teacher"));
+			const q = query(usersRef, where("userType", "==", "student"));
 			const querySnapshot = await getDocs(q);
-			const mentorList = querySnapshot.docs.map((doc) => {
-				const mentorData = doc.data();
-				const approvedGroups = mentorData.approved
-					? mentorData.approved.length
-					: 0; // Check if 'approved' exists before accessing its length
+			const studentList = querySnapshot.docs.map((doc) => {
+				const studentData = doc.data();
+
 				return {
 					id: doc.id,
-					approvedGroups,
-					...mentorData,
+
+					...studentData,
 				};
 			});
-			setAllMentor(mentorList);
-			console.log(mentorList);
+			setAllStudents(studentList);
+			console.log(studentList);
 		};
 
 		getAllMentor();
 		// getGroupId(currUserEmail);
 	}, []);
 
-	const deleteTeacher = async (teacherId) => {
+	const deleteSeacher = async (studentId) => {
 		const querySnapshot = await getDocs(collection(db, "Users"));
 
 		querySnapshot.forEach((doc) => {
 			const userData = doc.data();
 
-			if (userData.id === teacherId) {
+			if (userData.id === studentId) {
 				deleteDoc(doc.ref);
 				alert("Document successfully deleted!");
 			}
@@ -72,24 +70,24 @@ const Teachers = () => {
 	};
 	return (
 		<div className="page">
-			<h1 className="h1head">All Teachers</h1>
+			<h1 className="h1head"> All Students</h1>
 
 			<table>
 				<tr>
 					<th>Id</th>
 					<th>Name</th>
 					<th>Email</th>
-					<th>Groups</th>
+
 					<th>Action</th>
 				</tr>
-				{allMentor.map((mentor) => (
-					<tr key={mentor.id} className="listelement">
-						<td>{mentor.id}</td>
-						<td>{mentor.name}</td>
-						<td>{mentor.email}</td>
-						<td>{mentor.approvedGroups}</td>
+				{allStudents.map((student) => (
+					<tr key={student.id} className="listelement">
+						<td>{student.id}</td>
+						<td>{student.name}</td>
+						<td>{student.email}</td>
+
 						<td>
-							<Button onClick={() => deleteTeacher(mentor.id)}>Delete</Button>
+							<Button onClick={() => deleteSeacher(student.id)}>Delete</Button>
 						</td>
 					</tr>
 				))}
@@ -98,4 +96,4 @@ const Teachers = () => {
 	);
 };
 
-export default Teachers;
+export default Students;

@@ -79,3 +79,7 @@ body {
 		no-repeat center center;
 	font-family: "Roboto", sans-serif;
 } */
+.unorder {
+	width: 1500px;
+	margin: auto;
+}

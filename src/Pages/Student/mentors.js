@@ -68,10 +68,12 @@ const Mentor = () => {
 		const querySnapshot = await getDocs(q);
 		if (querySnapshot.empty) {
 			// console.log(`No mentor found with email ${email}.`);
+			alert("Request not Sent");
 		} else {
 			const mentorDoc = querySnapshot.docs[0];
 			const mentorRef = doc(db, "Users", mentorDoc.id);
 			await updateDoc(mentorRef, { requests: arrayUnion(groupId) });
+			alert("Request Sent");
 		}
 	}
 
@@ -83,36 +85,29 @@ const Mentor = () => {
 				<hr />
 				<br />
 				<br />
-				<ul>
-					{allMentor.map((mentor) => (
-						<li key={mentor.id} className="listelement">
-							{/* <h2>{group.name}</h2>
-					<p>{group.description}</p> */}
 
-							<div class="wrapper">
-								<div class="container">
-									<div class="card">
-										<header class="card-header">
-											<h2 class="card-title">{mentor.name}</h2>
-										</header>
-										<div class="card-body">
-											<p class="card-content">{mentor.email}</p>
-										</div>
-										<footer class="card-footer">
-											<Button
-												href="#"
-												class="card-link"
-												onClick={sendRequest.bind(this, mentor.email)}
-											>
-												Request
-											</Button>
-										</footer>
-									</div>
-								</div>
-							</div>
-						</li>
+				<table>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Email</th>
+
+						<th>Request</th>
+					</tr>
+					{allMentor.map((mentor) => (
+						<tr key={mentor.id} className="listelement">
+							<td>{mentor.id}</td>
+							<td>{mentor.name}</td>
+							<td>{mentor.email}</td>
+
+							<td>
+								<Button onClick={sendRequest.bind(this, mentor.email)}>
+									Request
+								</Button>
+							</td>
+						</tr>
 					))}
-				</ul>
+				</table>
 			</div>
 		);
 	} else {

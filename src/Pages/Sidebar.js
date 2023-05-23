@@ -67,6 +67,10 @@ const Sidebar = () => {
 			title: "Teachers",
 			path: "teachers",
 		},
+		{
+			title: "Students",
+			path: "students",
+		},
 	];
 
 	function addelement(temp) {

@@ -9,9 +9,11 @@ import {
 	updateDoc,
 	doc,
 	getDoc,
+	deleteDoc,
 } from "firebase/firestore";
 import { Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
+import "../../StyleSheets/card.css";
 
 const AllGroups = () => {
 	const [groups, setGroups] = useState([]);
@@ -28,46 +30,51 @@ const AllGroups = () => {
 		}
 		fetchGroups();
 	}, []);
+
+	const deleteGroup = async (uid) => {
+		const documentRef = doc(db, "Groups", uid);
+		await deleteDoc(documentRef);
+		alert("Group successfully deleted!");
+	};
+
 	return (
 		<div className="page ">
-			<h1>Welcome to All Groups Section</h1>
+			<h1>All Groups</h1>
 
-			<h3>all groups will be displayed here</h3>
-			<ul>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>View</th>
+					<th>Delete</th>
+				</tr>
 				{groups.map((group) => (
-					<li key={group.id} className="listelement">
-						{/* <h2>{group.name}</h2>
-						<p>{group.description}</p> */}
-
-						<div class="wrapper">
-							<div class="container">
-								<div class="card">
-									<header class="card-header">
-										<h2 class="card-title">{group.name}</h2>
-									</header>
-									<div class="card-body">
-										<p class="card-content">{group.description}</p>
-									</div>
-									<footer class="card-footer">
-										<Button
-											href="#"
-											class="card-link"
-											onClick={() => {
-												navigate(`/groupdetails/${group.id}`);
-											}}
-										>
-											View
-										</Button>
-										<Button href="#" class="card-link">
-											Delete
-										</Button>
-									</footer>
-								</div>
-							</div>
-						</div>
-					</li>
+					<tr key={group.id} className="listelement">
+						<td>{group.name}</td>
+						<td>{group.description}</td>
+						<td>
+							<Button
+								href="#"
+								class="card-link"
+								onClick={() => {
+									navigate(`/groupdetails/${group.id}`);
+								}}
+							>
+								View
+							</Button>
+						</td>
+						<td>
+							<Button
+								href="#"
+								class="card-link"
+								onClick={() => deleteGroup(group.id)}
+							>
+								Delete
+							</Button>
+						</td>
+					</tr>
 				))}
-			</ul>
+			</table>
 		</div>
 	);
 };

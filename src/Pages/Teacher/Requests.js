@@ -16,6 +16,8 @@ const Requests = () => {
 	const [reqs, setReqs] = useState([]);
 	const [groupInfo, setGroupInfo] = useState([]);
 	const [groupId, setGroupId] = useState("");
+	const [mentorName, setMentorName] = useState("");
+	const [mentorId, setMentorId] = useState("");
 
 	useEffect(() => {
 		async function fetchRequest() {
@@ -29,6 +31,20 @@ const Requests = () => {
 		// console.log("group", groupInfo);
 	}, []);
 
+	const currentUserInfo = async (uid) => {
+		const userRef = doc(db, "Users", uid);
+		const userInfo = await getDoc(userRef);
+		const name = userInfo.data().name;
+		const id = userInfo.data().id;
+
+		setMentorId(id);
+		setMentorName(name);
+		console.log("my user info", name, ",", id);
+	};
+
+	useEffect(() => {
+		currentUserInfo(auth.currentUser.uid);
+	}, [auth.currentUser.uid]);
 	useEffect(() => {
 		async function getGroupDocs() {
 			for (let index = 0; index < reqs.length; index++) {
@@ -52,17 +68,24 @@ const Requests = () => {
 		getGroupDocs();
 	}, [reqs]);
 
-	const approveRequest = async (teacherId, studentId) => {
+	const approveRequest = async (teacherId, groupId) => {
 		const docRef = doc(db, "Users", teacherId);
 
 		// Remove the student ID from the requests array
 		await updateDoc(docRef, {
-			requests: arrayRemove(studentId),
+			requests: arrayRemove(groupId),
 		});
 
 		// Add the student ID to the approved array
 		await updateDoc(docRef, {
-			approved: arrayUnion(studentId),
+			approved: arrayUnion(groupId),
+		});
+
+		const groupRef = doc(db, "Groups", groupId);
+
+		await updateDoc(groupRef, {
+			mentorName: mentorName,
+			mentorId: mentorId,
 		});
 
 		alert("Request approved successfully!");
@@ -81,48 +104,38 @@ const Requests = () => {
 	return (
 		<div className="page">
 			<h1>Welcome to Request page</h1>
-
-			<ul>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Approve</th>
+					<th>Decline</th>
+				</tr>
 				{groupInfo.map((info) => (
-					<li key={info.id} className="listelement">
-						{/* <h2>{group.name}</h2>
-					<p>{group.description}</p> */}
-
-						<div class="wrapper">
-							<div class="container">
-								<div class="card">
-									<header class="card-header">
-										<h2 class="card-title">{info.projectName}</h2>
-									</header>
-									<div class="card-body">
-										<p class="card-content">{info.projectDescription}</p>
-									</div>
-									<footer class="card-footer">
-										<Button
-											href="#"
-											class="card-link"
-											onClick={() =>
-												approveRequest(auth.currentUser.uid, info.id)
-											}
-										>
-											Approve
-										</Button>
-										<Button
-											href="#"
-											class="card-link"
-											onClick={() =>
-												declineRequest(auth.currentUser.uid, info.id)
-											}
-										>
-											Decline
-										</Button>
-									</footer>
-								</div>
-							</div>
-						</div>
-					</li>
+					<tr key={info.id} className="listelement">
+						<td>{info.projectName}</td>
+						<td>{info.projectDescription}</td>
+						<td>
+							<Button
+								href="#"
+								class="card-link"
+								onClick={() => approveRequest(auth.currentUser.uid, info.id)}
+							>
+								Approve
+							</Button>
+						</td>
+						<td>
+							<Button
+								href="#"
+								class="card-link"
+								onClick={() => declineRequest(auth.currentUser.uid, info.id)}
+							>
+								Decline
+							</Button>
+						</td>
+					</tr>
 				))}
-			</ul>
+			</table>
 		</div>
 	);
 };

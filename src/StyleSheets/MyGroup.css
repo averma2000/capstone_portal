@@ -48,16 +48,38 @@
 }
 
 .myModules {
-	margin-left: 80px;
-	display: flex;
-	align-items: left;
-	flex-direction: column;
+	margin: 5px;
+	margin-left: 70px;
+	width: 90%;
+	/* background-color: white; */
+	padding: 2px;
+	border-radius: 10px;
+}
+.myModules h3 {
+	margin: 5px;
+	margin-left: -10px;
+	width: 96%;
+	/* background-color: white; */
+	padding: 2px;
+	border-radius: 10px;
 }
 
+.myModules ol {
+	margin-left: 10px;
+}
+.myModules input {
+	margin-left: -30px;
+}
+.myModules input {
+	margin-left: -30px;
+}
 .myModulehead {
-	margin-left: 100px;
-	width: 1100px;
-	/* background-color: yellow; */
+	margin: 5px;
+	margin-left: 70px;
+	width: 90%;
+	/* background-color: white; */
+	padding: 2px;
+	border-radius: 10px;
 }
 .submitbtn {
 	/* background-color: #ce3131; */
@@ -69,6 +91,7 @@
 
 hr {
 	border: 1px solid black;
+	width: 100%;
 }
 
 .myModulehead h2 {

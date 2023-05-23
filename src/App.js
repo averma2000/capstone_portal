@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import { auth } from "./firebaseConfig";
 import GroupDetails from "./Pages/groupDetailspage";
+import Students from "./Pages/Admin/Students";
 
 function App() {
 	const [isAuthenticate, setIsAuthenticate] = useState(false);
@@ -68,6 +69,7 @@ function App() {
 					<Route path="/list" element={<List />} />
 					<Route path="/allgroups" element={<AllGroups />} />
 					<Route path="/teachers" element={<Teachers />} />
+					<Route path="/students" element={<Students />} />
 					<Route path="/projectdetails" element={<ProjectDetails />} />
 					<Route path="/addmembers" element={<AddMembers />} />
 					<Route path="/groupdetails/:id" element={<GroupDetails />} />
