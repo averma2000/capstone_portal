@@ -62,54 +62,58 @@ const AddMembers = () => {
 	};
 
 	const addMember = async (e) => {
-		e.preventDefault();
-		if (user1 == "" || user2 == "" || user3 == "") {
-			alert("Please fill all the fields");
-		}
-		const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
+		try {
+			e.preventDefault();
+			if (user1 == "" || user2 == "" || user3 == "") {
+				alert("Please fill all the fields");
+			}
+			const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
 
-		if (checkRollNos(users, allUsers)) {
-			console.log("before");
-			const userRefs = [];
-			users.forEach((user) => {
-				const userRef = query(
-					collection(db, "Users"),
-					where("id", "==", user.rollno)
-				);
-				userRefs.push(userRef);
-			});
-			const snapshots = await Promise.all(userRefs.map(getDocs));
-			snapshots.forEach((querySnapshot) => {
-				querySnapshot.forEach((doc) => {
-					const docRef = doc.ref;
-					updateDoc(docRef, { GroupId: gid });
+			if (checkRollNos(users, allUsers)) {
+				console.log("before");
+				const userRefs = [];
+				users.forEach((user) => {
+					const userRef = query(
+						collection(db, "Users"),
+						where("id", "==", user.rollno)
+					);
+					userRefs.push(userRef);
 				});
-			});
-			addUserToGroup(userRefs);
+				const snapshots = await Promise.all(userRefs.map(getDocs));
+				snapshots.forEach((querySnapshot) => {
+					querySnapshot.forEach((doc) => {
+						const docRef = doc.ref;
+						updateDoc(docRef, { GroupId: gid });
+					});
+				});
+				console.log("after");
+				// addUserToGroup(userRefs);
 
-			console.log("after");
-			alert("Participants added");
-			// Display an error message or prevent submission if constraints are not met
-			navigate("/mygroup");
+				alert("Participants added");
 
-			return;
+				navigate("/mygroup");
+
+				return;
+			}
+		} catch (error) {
+			console.error(error);
 		}
 
 		// Constraints are met, so proceed with adding users to the database
 		// ...
 	};
 
-	const addUserToGroup = (userref) => {
-		const groupsCollection = collection(db, "Groups", gid);
+	// const addUserToGroup = (userref) => {
+	// 	const groupsCollection = collection(db, "Groups", gid);
 
-		updateDoc(groupsCollection, { rollNumbers: userref })
-			.then(() => {
-				console.log("Document written with ID: ", docRef.id);
-			})
-			.catch((error) => {
-				console.error("Error adding document: ", error);
-			});
-	};
+	// 	updateDoc(groupsCollection, { rollNumbers: userref })
+	// 		.then(() => {
+	// 			console.log("Document written with ID: ", docRef.id);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error("Error adding document: ", error);
+	// 		});
+	// };
 
 	useEffect(() => {
 		// console

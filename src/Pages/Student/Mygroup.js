@@ -50,6 +50,7 @@ const Mygroup = () => {
 				mentorId: "pending",
 				modules: [],
 				remarks: [],
+				completed: [],
 			}).then((res) => {
 				const userRef = doc(db, "Users", currUserUid);
 				updateDoc(userRef, { ["power"]: true });
