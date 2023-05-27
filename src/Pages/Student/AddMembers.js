@@ -64,37 +64,124 @@ const AddMembers = () => {
 	const addMember = async (e) => {
 		try {
 			e.preventDefault();
-			if (user1 == "" || user2 == "" || user3 == "") {
+			if (user1 == "" && user2 == "" && user3 == "") {
 				alert("Please fill all the fields");
-			}
-			const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
+			} else if (user1 != "" && user2 == "" && user3 == "") {
+				const users = [{ rollno: user1 }];
 
-			if (checkRollNos(users, allUsers)) {
-				console.log("before");
-				const userRefs = [];
-				users.forEach((user) => {
-					const userRef = query(
-						collection(db, "Users"),
-						where("id", "==", user.rollno)
-					);
-					userRefs.push(userRef);
-				});
-				const snapshots = await Promise.all(userRefs.map(getDocs));
-				snapshots.forEach((querySnapshot) => {
-					querySnapshot.forEach((doc) => {
-						const docRef = doc.ref;
-						updateDoc(docRef, { GroupId: gid });
+				if (checkRollNos(users, allUsers)) {
+					console.log("before");
+					const userRefs = [];
+					users.forEach((user) => {
+						const userRef = query(
+							collection(db, "Users"),
+							where("id", "==", user.rollno)
+						);
+						userRefs.push(userRef);
 					});
-				});
-				console.log("after");
-				// addUserToGroup(userRefs);
+					const snapshots = await Promise.all(userRefs.map(getDocs));
+					snapshots.forEach((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							const docRef = doc.ref;
+							updateDoc(docRef, { GroupId: gid });
+						});
+					});
 
-				alert("Participants added");
+					// addUserToGroup(userRefs);
+					console.log("after");
+					alert("1 Participants added");
 
-				navigate("/mygroup");
+					navigate("/mygroup");
 
-				return;
+					return;
+				}
+			} else if (user1 != "" && user2 != "" && user3 == "") {
+				const users = [{ rollno: user1 }, { rollno: user2 }];
+
+				if (checkRollNos(users, allUsers)) {
+					console.log("before");
+					const userRefs = [];
+					users.forEach((user) => {
+						const userRef = query(
+							collection(db, "Users"),
+							where("id", "==", user.rollno)
+						);
+						userRefs.push(userRef);
+					});
+					const snapshots = await Promise.all(userRefs.map(getDocs));
+					snapshots.forEach((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							const docRef = doc.ref;
+							updateDoc(docRef, { GroupId: gid });
+						});
+					});
+
+					// addUserToGroup(userRefs);
+					console.log("after");
+					alert("2 Participants added");
+
+					navigate("/mygroup");
+
+					return;
+				}
+			} else {
+				const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
+
+				if (checkRollNos(users, allUsers)) {
+					console.log("before");
+					const userRefs = [];
+					users.forEach((user) => {
+						const userRef = query(
+							collection(db, "Users"),
+							where("id", "==", user.rollno)
+						);
+						userRefs.push(userRef);
+					});
+					const snapshots = await Promise.all(userRefs.map(getDocs));
+					snapshots.forEach((querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							const docRef = doc.ref;
+							updateDoc(docRef, { GroupId: gid });
+						});
+					});
+
+					// addUserToGroup(userRefs);
+					console.log("after");
+					alert("3 Participants added");
+
+					navigate("/mygroup");
+
+					return;
+				}
 			}
+			// const users = [{ rollno: user1 }, { rollno: user2 }, { rollno: user3 }];
+
+			// if (checkRollNos(users, allUsers)) {
+			// 	console.log("before");
+			// 	const userRefs = [];
+			// 	users.forEach((user) => {
+			// 		const userRef = query(
+			// 			collection(db, "Users"),
+			// 			where("id", "==", user.rollno)
+			// 		);
+			// 		userRefs.push(userRef);
+			// 	});
+			// 	const snapshots = await Promise.all(userRefs.map(getDocs));
+			// 	snapshots.forEach((querySnapshot) => {
+			// 		querySnapshot.forEach((doc) => {
+			// 			const docRef = doc.ref;
+			// 			updateDoc(docRef, { GroupId: gid });
+			// 		});
+			// 	});
+
+			// 	// addUserToGroup(userRefs);
+			// 	console.log("after");
+			// 	alert("Participants added");
+
+			// 	navigate("/mygroup");
+
+			// 	return;
+			// }
 		} catch (error) {
 			console.error(error);
 		}
@@ -106,7 +193,7 @@ const AddMembers = () => {
 	// const addUserToGroup = (userref) => {
 	// 	const groupsCollection = collection(db, "Groups", gid);
 
-	// 	updateDoc(groupsCollection, { rollNumbers: userref })
+	// 	updateDoc(groupsCollection, { user: userref })
 	// 		.then(() => {
 	// 			console.log("Document written with ID: ", docRef.id);
 	// 		})
