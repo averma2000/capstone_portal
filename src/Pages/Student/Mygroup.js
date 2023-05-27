@@ -37,6 +37,38 @@ const Mygroup = () => {
 	const [myProgress, setMyProgress] = useState("");
 	const [myPower, setMyPower] = useState("");
 
+	const Progress_bar = ({ bgcolor, progress, height }) => {
+		const Parentdiv = {
+			height: height,
+			width: "85%",
+			backgroundColor: "white",
+			borderRadius: 40,
+			margin: 50,
+		};
+
+		const Childdiv = {
+			height: "100%",
+			width: `${progress}%`,
+			backgroundColor: bgcolor,
+			borderRadius: 40,
+			textAlign: "right",
+		};
+
+		const progresstext = {
+			padding: 10,
+			color: "white",
+			fontWeight: 300,
+		};
+
+		return (
+			<div style={Parentdiv}>
+				<div style={Childdiv}>
+					<span style={progresstext}>{`${progress}%`}</span>
+				</div>
+			</div>
+		);
+	};
+
 	const handleCreateGroup = async (e) => {
 		console.log("createGroup function called");
 		const querySnapshot = await getDocs(
@@ -111,22 +143,8 @@ const Mygroup = () => {
 			modules: arrayUnion(newModuleData),
 		});
 
-		alert("test");
+		alert("Module Added, please refresh");
 	};
-
-	const addStatus = async () => {
-		const docRef = doc(db, "Groups", Gid);
-		const moduleDoc = await getDoc(docRef);
-		const moduleData = moduleDoc.data().modules;
-		// console.log(typeof moduleData);
-		const newModuleData = moduleName;
-		updateDoc(docRef, {
-			completed: arrayUnion(false),
-		});
-
-		alert("test");
-	};
-
 	const showModules = async () => {
 		const docRef = doc(db, "Groups", Gid);
 		const moduleDoc = await getDoc(docRef);
@@ -168,7 +186,7 @@ const Mygroup = () => {
 
 	useEffect(() => {
 		getGroupId(currUserEmail);
-	}, []);
+	}, [currUserEmail]);
 
 	useEffect(() => {
 		getGroupinfo(Gid);
@@ -226,6 +244,7 @@ const Mygroup = () => {
 							value={moduleName}
 							onChange={(e) => setModuleName(e.target.value)}
 						/>
+
 						<Button className="mybutton" onClick={addModule}>
 							Save
 						</Button>
@@ -261,20 +280,26 @@ const Mygroup = () => {
 				<div className="myModulehead">
 					<h2>Project details</h2>
 				</div>
+				<hr />
 				<div className="myModulehead">
 					<h3>
 						<u>Project name</u> : {projectName}
 					</h3>
 				</div>
+				<hr />
 				<div className="myModulehead">
 					<h3>
 						<u>Project Description</u> : {projectDescription}
 					</h3>
 				</div>
+				<hr />
 				<div className="myModulehead">
-					<h3>Project Progress........................{myProgress}%</h3>
+					<h3>
+						Project Progress
+						<Progress_bar bgcolor="#172D46" progress={myProgress} height={25} />
+					</h3>
 				</div>
-
+				<hr />
 				<div className="myModulehead">
 					<h3>Project Modules</h3>
 				</div>
@@ -285,7 +310,10 @@ const Mygroup = () => {
 						{allModule.map((module) => (
 							<li key={module} className="listelement">
 								<h4>{module}</h4>
-								<Button onClick={() => moveToComplete(Gid, module)}>
+								<Button
+									onClick={() => moveToComplete(Gid, module)}
+									className="completebtn"
+								>
 									Complete
 								</Button>
 							</li>
@@ -293,7 +321,7 @@ const Mygroup = () => {
 					</ol>
 				</div>
 				<div className="myModules">{editInfo()}</div>
-
+				<hr />
 				<div className="myModules">
 					<h3>Completed Modules</h3>
 					<ol>
@@ -304,7 +332,7 @@ const Mygroup = () => {
 						))}
 					</ol>
 				</div>
-
+				<hr />
 				<div className="myModules">
 					<h3>Remarks</h3>
 					<ol>

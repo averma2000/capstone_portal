@@ -89,7 +89,12 @@ const Teachers = () => {
 						<td>{mentor.email}</td>
 						<td>{mentor.approvedGroups}</td>
 						<td>
-							<Button onClick={() => deleteTeacher(mentor.id)}>Delete</Button>
+							<Button
+								className="completebtn2"
+								onClick={() => deleteTeacher(mentor.id)}
+							>
+								Delete
+							</Button>
 						</td>
 					</tr>
 				))}

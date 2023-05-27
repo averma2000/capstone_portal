@@ -12,10 +12,13 @@ import {
 	getDoc,
 	arrayUnion,
 } from "firebase/firestore";
+import icon from "./icon.png";
 import { Button } from "reactstrap";
+import "../../StyleSheets/MyGroup.css";
 
 const Mentor = () => {
-	const [gMentor, setgMentor] = useState("pending");
+	const [gMentorName, setgMentorName] = useState("pending");
+	const [gMentorId, setgMentorId] = useState("pending");
 	const [allMentor, setAllMentor] = useState([]);
 	const [groupId, setGroupId] = useState("");
 	const currUserEmail = auth.currentUser.email;
@@ -35,9 +38,12 @@ const Mentor = () => {
 			console.log(groupId);
 			const groupRef = doc(db, "Groups", gid);
 			const groupDoc = await getDoc(groupRef);
-			const valmentor = groupDoc.data().mentorId;
-			console.log("val mentor", valmentor);
-			setgMentor(valmentor);
+			const valmentorId = groupDoc.data().mentorId;
+			const valmentorName = groupDoc.data().mentorName;
+			console.log("val mentor", valmentorId);
+			console.log("val mentor", valmentorName);
+			setgMentorId(valmentorId);
+			setgMentorName(valmentorName);
 		}
 	};
 
@@ -77,7 +83,7 @@ const Mentor = () => {
 		}
 	}
 
-	if (gMentor == "pending") {
+	if (gMentorId == "pending") {
 		return (
 			<div className="page">
 				<h1 className="reqbtnsection">Mentor not aloted to group</h1>
@@ -101,7 +107,10 @@ const Mentor = () => {
 							<td>{mentor.email}</td>
 
 							<td>
-								<Button onClick={sendRequest.bind(this, mentor.email)}>
+								<Button
+									className="completebtn"
+									onClick={sendRequest.bind(this, mentor.email)}
+								>
 									Request
 								</Button>
 							</td>
@@ -114,6 +123,15 @@ const Mentor = () => {
 		return (
 			<div className="page">
 				<h1>Mentor alloted to group</h1>
+				<br />
+				<br />
+				<img src={icon} alt="User" />
+				<h2>
+					Mentor Name : <u>{gMentorName}</u>
+				</h2>
+				<h2>
+					Mentor Id : <u>{gMentorId}</u>
+				</h2>
 			</div>
 		);
 	}

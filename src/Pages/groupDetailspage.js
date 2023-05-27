@@ -40,6 +40,37 @@ const GroupDetails = () => {
 	// 	console.log("location", Gid);
 	// }
 
+	const Progress_bar = ({ bgcolor, progress, height }) => {
+		const Parentdiv = {
+			height: height,
+			width: "85%",
+			backgroundColor: "white",
+			borderRadius: 40,
+			margin: 50,
+		};
+
+		const Childdiv = {
+			height: "100%",
+			width: `${progress}%`,
+			backgroundColor: bgcolor,
+			borderRadius: 40,
+			textAlign: "right",
+		};
+
+		const progresstext = {
+			padding: 10,
+			color: "white",
+			fontWeight: 300,
+		};
+
+		return (
+			<div style={Parentdiv}>
+				<div style={Childdiv}>
+					<span style={progresstext}>{`${progress}%`}</span>
+				</div>
+			</div>
+		);
+	};
 	const { id } = useParams();
 	// console.log("id", id);
 	const getGroupinfo = async (groupId) => {
@@ -114,23 +145,28 @@ const GroupDetails = () => {
 			<div className="myModulehead">
 				<h2>Project details</h2>
 			</div>
-
-			<div className="myModulehead">
-				<h3>Project name : {projectName}</h3>
-			</div>
-
+			<hr />
 			<div className="myModulehead">
 				<h3>
-					Project Description : <br />
+					<u>Project name</u> : {projectName}
 				</h3>
-				<hr />
+			</div>
+			<hr />
+			<div className="myModulehead">
+				<h3>
+					<u>Project Description</u> : <br />
+				</h3>
+
 				<h3>{projectDescription}</h3>
 			</div>
-
+			<hr />
 			<div className="myModulehead">
-				<h3>Project Progress........................{myProgress}%</h3>
+				<h3>
+					Project Progress
+					<Progress_bar bgcolor="#172D46" progress={myProgress} height={25} />
+				</h3>
 			</div>
-
+			<hr />
 			<div className="myModulehead">
 				<h3>Project Modules</h3>
 			</div>
@@ -145,11 +181,34 @@ const GroupDetails = () => {
 					))}
 				</ol>
 			</div>
+
+			<hr />
+			<div className="myModules">
+				<h3>Modules Completed</h3>
+				<ol>
+					{completedModule.map((module) => (
+						<li key={module.id} className="listelement">
+							<h4>{module}</h4>
+						</li>
+					))}
+				</ol>
+			</div>
+			<hr />
+			<div className="myModules">
+				<h3>Remarks</h3>
+				<ol>
+					{myRemarks.map((remark) => (
+						<li key={remark} className="listelement">
+							<h4>{remark}</h4>
+						</li>
+					))}
+				</ol>
+			</div>
 			<div className="myModules">
 				<div className="student-info">
 					<div className="student-credentials">
 						<p>Remark For {allRemarks.length}</p>
-						<br />
+
 						<input
 							name="student"
 							type="text"
@@ -163,27 +222,6 @@ const GroupDetails = () => {
 						</button>
 					</div>
 				</div>
-			</div>
-			<div className="myModules">
-				<h3>Modules Completed</h3>
-				<ol>
-					{completedModule.map((module) => (
-						<li key={module.id} className="listelement">
-							<h4>{module}</h4>
-						</li>
-					))}
-				</ol>
-			</div>
-
-			<div className="myModules">
-				<h3>Remarks</h3>
-				<ol>
-					{myRemarks.map((remark) => (
-						<li key={remark} className="listelement">
-							<h4>{remark}</h4>
-						</li>
-					))}
-				</ol>
 			</div>
 		</div>
 	);

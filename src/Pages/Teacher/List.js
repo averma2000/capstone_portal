@@ -63,6 +63,7 @@ const List = () => {
 			<table class="table-fill">
 				<thead>
 					<tr>
+						<th class="text-left">Roll no</th>
 						<th class="text-left">Name</th>
 						<th class="text-left">Email</th>
 					</tr>
@@ -71,6 +72,7 @@ const List = () => {
 					{userInfo.map((info) => {
 						return (
 							<tr>
+								<td class="text-left">{info.id}</td>
 								<td class="text-left">{info.name}</td>
 								<td class="text-left">{info.email}</td>
 							</tr>

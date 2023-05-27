@@ -43,8 +43,8 @@ const AllGroups = () => {
 
 			<table>
 				<tr>
-					<th>Name</th>
-					<th>Email</th>
+					<th>Project Name</th>
+					<th>Project Description</th>
 					<th>View</th>
 					<th>Delete</th>
 				</tr>

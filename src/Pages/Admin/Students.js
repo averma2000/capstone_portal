@@ -44,7 +44,7 @@ const Students = () => {
 
 				return {
 					id: doc.id,
-
+					group: doc.GroupId,
 					...studentData,
 				};
 			});
@@ -77,17 +77,23 @@ const Students = () => {
 					<th>Id</th>
 					<th>Name</th>
 					<th>Email</th>
-
+					<th>Group</th>
 					<th>Action</th>
 				</tr>
 				{allStudents.map((student) => (
 					<tr key={student.id} className="listelement">
 						<td>{student.id}</td>
 						<td>{student.name}</td>
-						<td>{student.email}</td>
 
+						<td>{student.email}</td>
+						<td>{student.GroupId}</td>
 						<td>
-							<Button onClick={() => deleteSeacher(student.id)}>Delete</Button>
+							<Button
+								className="completebtn2"
+								onClick={() => deleteSeacher(student.id)}
+							>
+								Delete
+							</Button>
 						</td>
 					</tr>
 				))}
